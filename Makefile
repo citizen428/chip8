@@ -6,6 +6,9 @@ run: build
 build:
 	@go build -o bin/${PRG} ./cmd/${PRG}
 
+test:
+	@go test ./internal/emulator
+
 lint:
 	@go vet ./...
 	@staticcheck ./...
