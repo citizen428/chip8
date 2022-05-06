@@ -2,14 +2,18 @@ package emulator
 
 import "github.com/veandco/go-sdl2/sdl"
 
+const windowTitle = "CHIP-8"
+const emulatorWidth = 640
+const emulatorHeight = 320
+
 func Run() {
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		panic(err)
 	}
 	defer sdl.Quit()
 
-	window, err := sdl.CreateWindow("CHIP-8", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
-		640, 320, sdl.WINDOW_SHOWN)
+	window, err := sdl.CreateWindow(windowTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
+		emulatorWidth, emulatorHeight, sdl.WINDOW_SHOWN)
 	if err != nil {
 		panic(err)
 	}
