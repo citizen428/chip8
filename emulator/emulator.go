@@ -15,6 +15,11 @@ func Run() {
 	}
 	defer window.Destroy()
 
+	renderer, err := sdl.CreateRenderer(window, -1, sdl.TEXTUREACCESS_STATIC)
+	if err != nil {
+		panic(err)
+	}
+
 EventLoop:
 	for {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
@@ -23,5 +28,12 @@ EventLoop:
 				break EventLoop
 			}
 		}
+		renderer.SetDrawColor(0, 0, 0, 0)
+		renderer.Clear()
+		renderer.SetDrawColor(255, 255, 255, 0)
+		r := sdl.Rect{X: 0, Y: 0, W: 40, H: 40}
+		renderer.FillRect(&r)
+		renderer.Present()
+
 	}
 }
