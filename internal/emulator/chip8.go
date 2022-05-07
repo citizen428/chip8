@@ -1,9 +1,11 @@
 package emulator
 
 const (
+	memorySize = 4096
 	stackDepth = 16
 )
 
+type memory [memorySize]uint8
 type stack [stackDepth]uint16
 
 type chip8 struct {
@@ -15,8 +17,25 @@ type chip8 struct {
 
 func NewChip8() chip8 {
 	c := chip8{}
-	copy(c.memory.storage[0:80], defaultCharacterSet)
+	copy(c.memory[0:80], defaultCharacterSet)
 	return c
+}
+
+// An invalid memory access in the emulator is not recoverable in Go code, so we panic.
+func validateMemoryIndex(index int) {
+	if index < 0 || index > memorySize {
+		panic("Invalid memory access")
+	}
+}
+
+func (m *memory) memSet(index int, val uint8) {
+	validateMemoryIndex(index)
+	m[index] = val
+}
+
+func (m memory) memGet(index int) uint8 {
+	validateMemoryIndex(index)
+	return m[index]
 }
 
 func (c chip8) validateStackDepth() {
