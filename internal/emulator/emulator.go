@@ -13,7 +13,7 @@ const (
 )
 
 func Run() {
-	chip8 := chip8{}
+	chip8 := NewChip8()
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		panic(err)
 	}

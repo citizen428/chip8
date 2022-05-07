@@ -5,7 +5,7 @@ import "testing"
 func TestStackPushAddsValueToStack(t *testing.T) {
 	var want uint16
 
-	chip8 := chip8{}
+	chip8 := NewChip8()
 	chip8.stackPush(42)
 	want = 42
 	got := chip8.stack[0]
@@ -18,7 +18,7 @@ func TestStackPushAddsValueToStack(t *testing.T) {
 func TestStackPushIncrementsStackPointer(t *testing.T) {
 	var want uint8
 
-	chip8 := chip8{}
+	chip8 := NewChip8()
 	chip8.stackPush(42)
 	chip8.stackPush(42)
 	want = 2
@@ -32,7 +32,7 @@ func TestStackPushIncrementsStackPointer(t *testing.T) {
 func TestStackPopReturnsValue(t *testing.T) {
 	var want uint16
 
-	chip8 := chip8{}
+	chip8 := NewChip8()
 	chip8.stackPush(1)
 	chip8.stackPush(2)
 
@@ -47,7 +47,7 @@ func TestStackPopReturnsValue(t *testing.T) {
 func TestStackPopDecrementsStackPointer(t *testing.T) {
 	var want uint8
 
-	chip8 := chip8{}
+	chip8 := NewChip8()
 	chip8.registers.sp = 5
 	chip8.stackPop()
 	want = 4
@@ -62,7 +62,7 @@ func TestStackPopDecrementsStackPointer(t *testing.T) {
 func TestValidateStackDepth(t *testing.T) {
 	defer func() { recover() }()
 
-	chip8 := chip8{}
+	chip8 := NewChip8()
 	chip8.registers.sp = 17
 	chip8.stackPush(42)
 
