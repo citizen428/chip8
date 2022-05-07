@@ -24,6 +24,7 @@ type chip8 struct {
 	registers registers
 	stack     stack
 	keyboard  keyboard
+	screen    screen
 }
 
 // Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.4

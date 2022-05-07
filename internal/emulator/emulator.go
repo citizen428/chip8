@@ -8,8 +8,9 @@ import (
 
 const (
 	windowTitle    = "CHIP-8"
-	emulatorWidth  = 640
-	emulatorHeight = 320
+	scaleFactor    = 10
+	emulatorWidth  = chip8width * scaleFactor
+	emulatorHeight = chip8height * scaleFactor
 )
 
 func Run() {
@@ -30,6 +31,10 @@ func Run() {
 	if err != nil {
 		panic(err)
 	}
+	chip8.screen.setPixel(0, 0)
+	chip8.screen.setPixel(63, 0)
+	chip8.screen.setPixel(0, 31)
+	chip8.screen.setPixel(63, 31)
 
 EventLoop:
 	for {
@@ -50,11 +55,24 @@ EventLoop:
 				}
 			}
 		}
+
 		renderer.SetDrawColor(0, 0, 0, 0)
 		renderer.Clear()
 		renderer.SetDrawColor(255, 255, 255, 0)
-		r := sdl.Rect{X: 0, Y: 0, W: 40, H: 40}
-		renderer.FillRect(&r)
+
+		for y := 0; y < chip8height; y++ {
+			for x := 0; x < chip8width; x++ {
+				if chip8.screen.isPixelSet(x, y) {
+					r := sdl.Rect{
+						X: int32(x * scaleFactor),
+						Y: int32(y * scaleFactor),
+						W: scaleFactor,
+						H: scaleFactor}
+					renderer.FillRect(&r)
+				}
+			}
+		}
+
 		renderer.Present()
 
 	}
