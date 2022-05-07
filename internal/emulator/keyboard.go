@@ -32,13 +32,6 @@ var keyboardMap = map[sdl.Keycode]int{
 	sdl.K_v: 15,
 }
 
-// This validates the keys after mapping so we shouldn't have an invalid key
-func validateKey(key int) {
-	if key < 0 || key > keyCount-1 {
-		panic("Invalid key")
-	}
-}
-
 func mapKey(key sdl.Keycode) (int, bool) {
 	if v, ok := keyboardMap[key]; ok {
 		return v, true

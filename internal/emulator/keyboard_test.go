@@ -33,7 +33,7 @@ func TestKeyUp(t *testing.T) {
 	}
 }
 
-func TestMap(t *testing.T) {
+func TestMapKey(t *testing.T) {
 	var tests = map[sdl.Keycode]int{
 		sdl.K_1: 1,
 		sdl.K_w: 5,
@@ -46,5 +46,13 @@ func TestMap(t *testing.T) {
 		if got != want {
 			t.Errorf("got %v, wanted %v", got, want)
 		}
+	}
+}
+
+func TestMapKeyUnmapped(t *testing.T) {
+	_, err := mapKey(sdl.K_RETURN)
+
+	if err {
+		t.Errorf("got %v, wanted %v", true, false)
 	}
 }
