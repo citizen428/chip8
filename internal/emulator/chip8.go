@@ -9,6 +9,7 @@ type stack [stackDepth]uint16
 type chip8 struct {
 	registers registers
 	stack     stack
+	keyboard  keyboard
 }
 
 func (c chip8) validateStackDepth() {

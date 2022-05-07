@@ -1,6 +1,10 @@
 package emulator
 
-import "github.com/veandco/go-sdl2/sdl"
+import (
+	"fmt"
+
+	"github.com/veandco/go-sdl2/sdl"
+)
 
 const (
 	windowTitle    = "CHIP-8"
@@ -9,6 +13,7 @@ const (
 )
 
 func Run() {
+	chip8 := chip8{}
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		panic(err)
 	}
@@ -29,9 +34,20 @@ func Run() {
 EventLoop:
 	for {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
-			switch event.(type) {
+			switch e := event.(type) {
 			case *sdl.QuitEvent:
 				break EventLoop
+			case *sdl.KeyboardEvent:
+				mappedKey, ok := mapKey(e.Keysym.Sym)
+				if ok {
+					if e.GetType() == sdl.KEYDOWN {
+						fmt.Printf("virtual key '%v' down\n", mappedKey)
+						chip8.keyboard.keyDown(mappedKey)
+					} else {
+						fmt.Printf("virtual key '%v' up\n", mappedKey)
+						chip8.keyboard.keyUp(mappedKey)
+					}
+				}
 			}
 		}
 		renderer.SetDrawColor(0, 0, 0, 0)
