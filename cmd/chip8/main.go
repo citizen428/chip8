@@ -1,7 +1,14 @@
 package main
 
-import "github.com/citizen428/chip8/internal/emulator"
+import (
+	"flag"
+
+	"github.com/citizen428/chip8/internal/emulator"
+)
 
 func main() {
-	emulator.Run()
+	scaleFactor := flag.Int("scaleFactor", 10, "Display scale factor")
+	flag.Parse()
+
+	emulator.Run(*scaleFactor)
 }

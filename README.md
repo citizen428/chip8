@@ -2,7 +2,21 @@
 
 A [CHIP-8](https://en.m.wikipedia.org/wiki/Chip-8) emulator written in Go.
 
-## Keyboard mapping
+## Usage
+
+```
+Usage of chip8:
+  -scaleFactor int
+    	Display scale factor (default 10)
+```
+
+The original CHIP-8 had  a 64x32 pixel display, which is too small for modern
+screens. The optional `scaleFactor` argument can be used to upscale it to a
+more sensible size. With the default value of 10 the emulated display will have
+a size of 640x320 pixels and each CHIP-8 pixel will be rendered as 10x10px
+rectangle.
+
+### Keyboard mapping
 
 CHIP-8 systems used a hexadecimal keyboard with the layout shown on the left.
 This is mapped to the physical keyboard as shown on the right.
