@@ -15,12 +15,12 @@ func validateMemoryIndex(index int) {
 	}
 }
 
-func (m *memory) Set(index int, val uint8) {
+func (m *memory) set(index int, val uint8) {
 	validateMemoryIndex(index)
 	m.storage[index] = val
 }
 
-func (m memory) Get(index int) uint8 {
+func (m memory) get(index int) uint8 {
 	validateMemoryIndex(index)
 	return m.storage[index]
 }

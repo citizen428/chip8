@@ -16,9 +16,9 @@ func TestSetGet(t *testing.T) {
 
 	m := memory{}
 	index := 23
-	m.Set(index, 42)
+	m.set(index, 42)
 	want = 42
-	got := m.Get(index)
+	got := m.get(index)
 
 	if got != want {
 		t.Errorf("got %v, wanted %v", got, want)
@@ -28,7 +28,7 @@ func TestSetGet(t *testing.T) {
 func TestMemoryLowerBound(t *testing.T) {
 	defer func() { recover() }()
 
-	memory{}.Get(-1)
+	memory{}.get(-1)
 
 	// Unreachable if `Get` panics as intended
 	t.Errorf("did not panic")
@@ -37,7 +37,7 @@ func TestMemoryLowerBound(t *testing.T) {
 func TestMemoryUpperBound(t *testing.T) {
 	defer func() { recover() }()
 
-	memory{}.Get(memorySize + 1)
+	memory{}.get(memorySize + 1)
 
 	// Unreachable if `Get` panics as intended
 	t.Errorf("did not panic")
