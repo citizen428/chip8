@@ -1,16 +1,9 @@
 package emulator
 
-import "testing"
-
-func TestLength(t *testing.T) {
-	chip8 := NewChip8()
-	want := memorySize
-	got := len(chip8.memory)
-
-	if got != want {
-		t.Errorf("got %v, wanted %v", got, want)
-	}
-}
+import (
+	"reflect"
+	"testing"
+)
 
 func TestMemSetGet(t *testing.T) {
 	var want uint8
@@ -109,5 +102,35 @@ func TestValidateStackDepth(t *testing.T) {
 	chip8.stackPush(42)
 
 	// Unreachable if `validateStackDepth` panics as intended
+	t.Errorf("did not panic")
+}
+
+func TestCharacterSetInitialization(t *testing.T) {
+	c := NewChip8()
+	want := []uint8{0xf0, 0x90, 0x90, 0x90, 0xf0}
+	got := c.memory[0:5]
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("got %v, wanted %v", got, want)
+	}
+}
+
+func TestSetPixelValidatesCoordinates(t *testing.T) {
+	defer func() { recover() }()
+
+	s := screen{}
+	s.setPixel(-1, 5)
+
+	// Unreachable if `validateScreenCoordinates` panics as intended
+	t.Errorf("did not panic")
+}
+
+func TestIsPixelSetValidatesCoordinates(t *testing.T) {
+	defer func() { recover() }()
+
+	s := screen{}
+	s.isPixelSet(1, 100)
+
+	// Unreachable if `validateScreenCoordinates` panics as intended
 	t.Errorf("did not panic")
 }
