@@ -7,12 +7,13 @@ import (
 )
 
 func Run(scaleFactor int) {
-	chip8 := NewChip8()
-	chip8.screen.drawSprite(62, 10, chip8.memory[0:5])
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		panic(err)
 	}
 	defer sdl.Quit()
+
+	chip8 := NewChip8()
+	chip8.screen.drawSprite(62, 10, chip8.memory[0:5])
 
 	emulatorWidth := int32(chip8width * scaleFactor)
 	emulatorHeight := int32(chip8height * scaleFactor)
@@ -28,7 +29,7 @@ func Run(scaleFactor int) {
 	if err != nil {
 		panic(err)
 	}
-
+	chip8.registers.st = 3
 EventLoop:
 	for {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
@@ -68,6 +69,7 @@ EventLoop:
 		}
 
 		renderer.Present()
-
+		chip8.handleDelayTimer()
+		chip8.handleSoundTimer()
 	}
 }

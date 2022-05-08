@@ -1,9 +1,14 @@
 package emulator
 
+import (
+	"time"
+)
+
 const (
 	dataRegistersCount = 16
 	memorySize         = 4096
 	stackDepth         = 16
+	delayMs            = 100
 )
 
 type memory [memorySize]uint8
@@ -87,4 +92,20 @@ func (c *chip8) stackPop() uint16 {
 	c.validateStackDepth()
 	val := c.stack[c.registers.sp]
 	return val
+}
+
+// Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.5
+func (c *chip8) handleDelayTimer() {
+	if c.registers.dt > 0 {
+		time.Sleep(delayMs * time.Millisecond)
+		c.registers.dt--
+	}
+}
+
+// Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.5
+// TODO: figure out better SDL sound solution
+func (c *chip8) handleSoundTimer() {
+	// if c.registers.st > 0 {
+	// 	c.registers.st--
+	// }
 }
