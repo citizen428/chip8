@@ -3,7 +3,15 @@ package emulator
 import (
 	"reflect"
 	"testing"
+
+	"github.com/veandco/go-sdl2/sdl"
 )
+
+func NewChip8NoAudio() chip8 {
+	c := chip8{}
+	copy(c.memory[0:80], defaultCharacterSet)
+	return c
+}
 
 func TestMemSetGet(t *testing.T) {
 	var want uint8
@@ -22,7 +30,7 @@ func TestMemSetGet(t *testing.T) {
 func TestMemoryLowerBound(t *testing.T) {
 	defer func() { recover() }()
 
-	NewChip8().memory.memGet(-1)
+	NewChip8NoAudio().memory.memGet(-1)
 
 	// Unreachable if `Get` panics as intended
 	t.Errorf("did not panic")
@@ -31,7 +39,8 @@ func TestMemoryLowerBound(t *testing.T) {
 func TestMemoryUpperBound(t *testing.T) {
 	defer func() { recover() }()
 
-	NewChip8().memory.memGet(memorySize + 1)
+	chip8 := NewChip8NoAudio()
+	chip8.memory.memGet(memorySize + 1)
 
 	// Unreachable if `Get` panics as intended
 	t.Errorf("did not panic")
@@ -40,7 +49,7 @@ func TestMemoryUpperBound(t *testing.T) {
 func TestStackPushAddsValueToStack(t *testing.T) {
 	var want uint16
 
-	chip8 := NewChip8()
+	chip8 := NewChip8NoAudio()
 	chip8.stackPush(42)
 	want = 42
 	got := chip8.stack[0]
@@ -53,7 +62,7 @@ func TestStackPushAddsValueToStack(t *testing.T) {
 func TestStackPushIncrementsStackPointer(t *testing.T) {
 	var want uint8
 
-	chip8 := NewChip8()
+	chip8 := NewChip8NoAudio()
 	chip8.stackPush(42)
 	chip8.stackPush(42)
 	want = 2
@@ -67,7 +76,7 @@ func TestStackPushIncrementsStackPointer(t *testing.T) {
 func TestStackPopReturnsValue(t *testing.T) {
 	var want uint16
 
-	chip8 := NewChip8()
+	chip8 := NewChip8NoAudio()
 	chip8.stackPush(1)
 	chip8.stackPush(2)
 
@@ -82,7 +91,7 @@ func TestStackPopReturnsValue(t *testing.T) {
 func TestStackPopDecrementsStackPointer(t *testing.T) {
 	var want uint8
 
-	chip8 := NewChip8()
+	chip8 := NewChip8NoAudio()
 	chip8.registers.sp = 5
 	chip8.stackPop()
 	want = 4
@@ -97,7 +106,7 @@ func TestStackPopDecrementsStackPointer(t *testing.T) {
 func TestValidateStackDepth(t *testing.T) {
 	defer func() { recover() }()
 
-	chip8 := NewChip8()
+	chip8 := NewChip8NoAudio()
 	chip8.registers.sp = 17
 	chip8.stackPush(42)
 
@@ -106,7 +115,7 @@ func TestValidateStackDepth(t *testing.T) {
 }
 
 func TestCharacterSetInitialization(t *testing.T) {
-	c := NewChip8()
+	c := NewChip8NoAudio()
 	want := []uint8{0xf0, 0x90, 0x90, 0x90, 0xf0}
 	got := c.memory[0:5]
 

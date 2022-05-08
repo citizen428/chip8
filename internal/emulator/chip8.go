@@ -30,6 +30,7 @@ type chip8 struct {
 	stack     stack
 	keyboard  keyboard
 	screen    screen
+	speaker   speaker
 }
 
 // Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.4
@@ -55,6 +56,7 @@ var defaultCharacterSet = []uint8{
 func NewChip8() chip8 {
 	c := chip8{}
 	copy(c.memory[0:80], defaultCharacterSet)
+	c.speaker = NewSpeaker()
 	return c
 }
 
@@ -103,9 +105,11 @@ func (c *chip8) handleDelayTimer() {
 }
 
 // Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.5
-// TODO: figure out better SDL sound solution
 func (c *chip8) handleSoundTimer() {
-	// if c.registers.st > 0 {
-	// 	c.registers.st--
-	// }
+	play := c.registers.st > 0
+	c.speaker.beep(play)
+	if play {
+		time.Sleep(delayMs * time.Millisecond)
+		c.registers.st--
+	}
 }

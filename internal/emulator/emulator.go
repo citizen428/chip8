@@ -29,7 +29,7 @@ func Run(scaleFactor int) {
 	if err != nil {
 		panic(err)
 	}
-	chip8.registers.st = 3
+	chip8.registers.st = 10
 EventLoop:
 	for {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
