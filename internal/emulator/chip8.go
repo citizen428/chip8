@@ -8,7 +8,7 @@ const (
 	dataRegistersCount = 16
 	memorySize         = 4096
 	stackDepth         = 16
-	delayMs            = 100
+	delayMs            = 17 // 60 Hz ~ every 17ms
 )
 
 type memory [memorySize]uint8
