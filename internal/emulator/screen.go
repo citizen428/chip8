@@ -1,5 +1,7 @@
 package emulator
 
+// Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.4=
+
 const (
 	chip8width  = 64
 	chip8height = 32
@@ -23,4 +25,27 @@ func (s *screen) setPixel(x, y int) {
 func (s *screen) isPixelSet(x, y int) bool {
 	validateScreenCoordinates(x, y)
 	return s.pixels[y][x]
+}
+
+func (s *screen) drawSprite(x int, y int, sprite []uint8) bool {
+	pixelCollission := false
+
+	for ly, byte := range sprite {
+		for lx := 0; lx < 8; lx++ {
+			if byte&(0b10000000>>lx) > 0 {
+				// Sprites wrap around the edges of the screen
+				dx := (x + lx) % chip8width
+				dy := (y + ly) % chip8height
+
+				pixelIsSet := s.isPixelSet(dx, dy)
+				if pixelIsSet {
+					pixelCollission = true
+				}
+				// XOR the previous pixel with true
+				s.pixels[dy][dx] = !pixelIsSet
+			}
+		}
+	}
+
+	return pixelCollission
 }

@@ -8,6 +8,7 @@ import (
 
 func Run(scaleFactor int) {
 	chip8 := NewChip8()
+	chip8.screen.drawSprite(62, 10, chip8.memory[0:5])
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		panic(err)
 	}
@@ -27,10 +28,6 @@ func Run(scaleFactor int) {
 	if err != nil {
 		panic(err)
 	}
-	chip8.screen.setPixel(0, 0)
-	chip8.screen.setPixel(63, 0)
-	chip8.screen.setPixel(0, 31)
-	chip8.screen.setPixel(63, 31)
 
 EventLoop:
 	for {
