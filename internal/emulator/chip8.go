@@ -1,6 +1,7 @@
 package emulator
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -9,6 +10,7 @@ const (
 	memorySize         = 4096
 	stackDepth         = 16
 	delayMs            = 17 // 60 Hz ~ every 17ms
+	programLoadAddress = 0x200
 )
 
 type memory [memorySize]uint8
@@ -77,6 +79,13 @@ func (m memory) memGet(index int) uint8 {
 	return m[index]
 }
 
+func (m memory) ReadInstruction(index int) uint16 {
+	validateMemoryIndex(index)
+	byte1 := uint16(m.memGet(index))
+	byte2 := uint16(m.memGet(index + 1))
+	return 256*byte1 + byte2
+}
+
 func (c chip8) validateStackDepth() {
 	if c.registers.sp > stackDepth {
 		panic("Stack overflow")
@@ -112,4 +121,18 @@ func (c *chip8) handleSoundTimer() {
 		time.Sleep(delayMs * time.Millisecond)
 		c.registers.st--
 	}
+}
+
+func (c *chip8) load(rom []byte) {
+	size := len(rom)
+	if size+programLoadAddress >= memorySize {
+		panic("ROM too big")
+	}
+
+	copy(c.memory[programLoadAddress:], rom)
+	c.registers.pc = programLoadAddress
+}
+
+func (c *chip8) exec(opcode uint16) {
+	fmt.Println(opcode)
 }

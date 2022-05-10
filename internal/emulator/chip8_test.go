@@ -3,8 +3,6 @@ package emulator
 import (
 	"reflect"
 	"testing"
-
-	"github.com/veandco/go-sdl2/sdl"
 )
 
 func NewChip8NoAudio() chip8 {
@@ -50,6 +48,7 @@ func TestStackPushAddsValueToStack(t *testing.T) {
 	var want uint16
 
 	chip8 := NewChip8NoAudio()
+
 	chip8.stackPush(42)
 	want = 42
 	got := chip8.stack[0]
@@ -100,7 +99,6 @@ func TestStackPopDecrementsStackPointer(t *testing.T) {
 	if got != want {
 		t.Errorf("got %v, wanted %v", got, want)
 	}
-
 }
 
 func TestValidateStackDepth(t *testing.T) {
@@ -142,4 +140,17 @@ func TestIsPixelSetValidatesCoordinates(t *testing.T) {
 
 	// Unreachable if `validateScreenCoordinates` panics as intended
 	t.Errorf("did not panic")
+}
+
+func TestReadInstruction(t *testing.T) {
+	c := NewChip8NoAudio()
+	c.memory[0x200] = 192
+	c.memory[0x201] = 168
+
+	var want uint16 = 0xc0a8
+	got := c.memory.ReadInstruction(0x200)
+
+	if got != want {
+		t.Errorf("got %v, wanted %v", got, want)
+	}
 }

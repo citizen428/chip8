@@ -7,7 +7,9 @@ A [CHIP-8](https://en.m.wikipedia.org/wiki/Chip-8) emulator written in Go.
 ```
 Usage of chip8:
   -scaleFactor int
-    	Display scale factor (default 10)
+        Display scale factor (default 10)
+  rom
+        Path to ROM (mandatory)
 ```
 
 The original CHIP-8 had  a 64x32 pixel display, which is too small for modern

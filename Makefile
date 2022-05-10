@@ -1,7 +1,7 @@
 PRG := chip8
 
 run: build
-	@./bin/${PRG} -scaleFactor=15
+	@./bin/${PRG} -scaleFactor=15 ${ROM}
 
 build:
 	@go build -o bin/${PRG} ./cmd/${PRG}

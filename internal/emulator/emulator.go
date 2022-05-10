@@ -2,18 +2,16 @@ package emulator
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/veandco/go-sdl2/sdl"
 )
 
-func Run(scaleFactor int) {
+func Run(romPath string, scaleFactor int) {
 	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		panic(err)
 	}
 	defer sdl.Quit()
-
-	chip8 := NewChip8()
-	chip8.screen.drawSprite(62, 10, chip8.memory[0:5])
 
 	emulatorWidth := int32(chip8width * scaleFactor)
 	emulatorHeight := int32(chip8height * scaleFactor)
@@ -29,7 +27,14 @@ func Run(scaleFactor int) {
 	if err != nil {
 		panic(err)
 	}
-	chip8.registers.st = 10
+
+	chip8 := NewChip8()
+	rom, err := os.ReadFile(romPath)
+	if err != nil {
+		fmt.Printf("Error reading ROM: %+v", err)
+		os.Exit(-1)
+	}
+	chip8.load(rom)
 EventLoop:
 	for {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
@@ -71,5 +76,9 @@ EventLoop:
 		renderer.Present()
 		chip8.handleDelayTimer()
 		chip8.handleSoundTimer()
+
+		opcode := chip8.memory.ReadInstruction(int(chip8.registers.pc))
+		chip8.exec(opcode)
+		chip8.registers.pc += 2
 	}
 }
