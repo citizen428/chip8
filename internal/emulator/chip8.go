@@ -1,7 +1,6 @@
 package emulator
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -105,6 +104,10 @@ func (c *chip8) stackPop() uint16 {
 	return val
 }
 
+func (r *registers) incrementPC() {
+	r.pc += 2
+}
+
 // Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.5
 func (c *chip8) handleDelayTimer() {
 	if c.registers.dt > 0 {
@@ -131,8 +134,4 @@ func (c *chip8) load(rom []byte) {
 
 	copy(c.memory[programLoadAddress:], rom)
 	c.registers.pc = programLoadAddress
-}
-
-func (c *chip8) exec(opcode uint16) {
-	fmt.Println(opcode)
 }

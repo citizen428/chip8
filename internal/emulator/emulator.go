@@ -35,6 +35,7 @@ func Run(romPath string, scaleFactor int) {
 		os.Exit(-1)
 	}
 	chip8.load(rom)
+
 EventLoop:
 	for {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
@@ -78,7 +79,7 @@ EventLoop:
 		chip8.handleSoundTimer()
 
 		opcode := chip8.memory.ReadInstruction(int(chip8.registers.pc))
+		chip8.registers.incrementPC()
 		chip8.exec(opcode)
-		chip8.registers.pc += 2
 	}
 }

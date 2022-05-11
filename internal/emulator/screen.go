@@ -49,3 +49,7 @@ func (s *screen) drawSprite(x int, y int, sprite []uint8) bool {
 
 	return pixelCollission
 }
+
+func (s *screen) clear() {
+	s.pixels = [chip8height][chip8width]bool{}
+}
