@@ -68,5 +68,68 @@ func (c *chip8) execExtended(opcode uint16) {
 	// 7xkk - ADD Vx, byte - Set Vx = Vx + kk.
 	case 0x7000:
 		c.registers.v[x] += kk
+
+	case 0x8000:
+		c.exec8xxx(opcode)
+	}
+}
+
+func (c *chip8) exec8xxx(opcode uint16) {
+	x := (opcode >> 8) & 0x000F
+	y := (opcode >> 4) & 0x000F
+	finalFourBits := opcode & 0x000F
+
+	switch finalFourBits {
+
+	// 8xy0 - LD Vx, Vy - Set Vx = Vy.
+	case 0x00:
+		c.registers.v[x] = c.registers.v[y]
+
+	// 8xy1 - OR Vx, Vy - Set Vx = Vx OR Vy.
+	case 0x01:
+		c.registers.v[x] |= c.registers.v[y]
+
+	// 8xy2 - AND Vx, Vy - Set Vx = Vx AND Vy.
+	case 0x02:
+		c.registers.v[x] &= c.registers.v[y]
+
+	// 8xy3 - XOR Vx, Vy - Set Vx = Vx XOR Vy.
+	case 0x03:
+		c.registers.v[x] ^= c.registers.v[y]
+
+	// 8xy4 - ADD Vx, Vy - Set Vx = Vx + Vy, set VF = carry.
+	case 0x04:
+		result := int(c.registers.v[x]) + int(c.registers.v[y])
+		c.registers.v[0xF] = 0
+		if result > 0xFF {
+			c.registers.v[0xF] = 1
+		}
+		c.registers.v[x] = uint8(result)
+
+	// 8xy5 - SUB Vx, Vy - Set Vx = Vx - Vy, set VF = NOT borrow.
+	case 0x05:
+		c.registers.v[0xF] = 0
+		if c.registers.v[x] > c.registers.v[y] {
+			c.registers.v[0xF] = 1
+		}
+		c.registers.v[x] -= c.registers.v[y]
+
+	// 8xy6 - SHR Vx {, Vy} - Set Vx = Vx SHR 1.
+	case 0x06:
+		c.registers.v[0xF] = c.registers.v[x] & 1
+		c.registers.v[x] /= 2
+
+	// 8xy7 - SUBN Vx, Vy - Set Vx = Vy - Vx, set VF = NOT borrow.
+	case 0x07:
+		c.registers.v[0xF] = 0
+		if c.registers.v[y] > c.registers.v[x] {
+			c.registers.v[0xF] = 1
+		}
+		c.registers.v[x] = c.registers.v[y] - c.registers.v[x]
+
+	// 8xyE - SHL Vx {, Vy} - Set Vx = Vx SHL 1.
+	case 0x0E:
+		c.registers.v[0xF] = c.registers.v[x] & 0b1000_0000
+		c.registers.v[x] *= 2
 	}
 }

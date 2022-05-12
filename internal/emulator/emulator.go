@@ -46,10 +46,8 @@ EventLoop:
 				mappedKey, ok := mapKey(e.Keysym.Sym)
 				if ok {
 					if e.GetType() == sdl.KEYDOWN {
-						fmt.Printf("virtual key '%v' down\n", mappedKey)
 						chip8.keyboard.keyDown(mappedKey)
 					} else {
-						fmt.Printf("virtual key '%v' up\n", mappedKey)
 						chip8.keyboard.keyUp(mappedKey)
 					}
 				}
