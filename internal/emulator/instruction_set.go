@@ -1,6 +1,12 @@
 package emulator
 
-import "math/rand"
+import (
+	"math/rand"
+
+	"github.com/veandco/go-sdl2/sdl"
+)
+
+const spriteHeight = 5
 
 // Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#3.0
 
@@ -193,7 +199,7 @@ func (c *chip8) execFxxx(opcode uint16) {
 
 	// Fx0A - LD Vx, K - Wait for a key press, store the value of the key in Vx.
 	case 0x0A:
-		key, ok := c.waitForKeypress()
+		key, ok := waitForKeypress()
 		if ok {
 			c.registers.v[x] = uint8(key)
 		}
@@ -238,4 +244,23 @@ func (c *chip8) execFxxx(opcode uint16) {
 		}
 	}
 
+}
+
+func waitForKeypress() (int, bool) {
+	var key int
+	var ok bool
+
+	running := true
+	for running {
+		event := sdl.WaitEvent()
+		switch e := event.(type) {
+		case *sdl.KeyboardEvent:
+			if e.GetType() == sdl.KEYDOWN {
+				key, ok = mapKey(e.Keysym.Sym)
+				running = false
+			}
+		}
+	}
+
+	return key, ok
 }

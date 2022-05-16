@@ -2,14 +2,9 @@ package emulator
 
 import (
 	"time"
-
-	"github.com/veandco/go-sdl2/sdl"
 )
 
-const (
-	delayMs            = 1
-	programLoadAddress = 0x200
-)
+const programLoadAddress = 0x200
 
 type chip8 struct {
 	memory    memory
@@ -49,24 +44,6 @@ func NewChip8() (chip8, func()) {
 	return c, closer
 }
 
-// Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.5
-func (c *chip8) handleDelayTimer() {
-	if c.registers.dt > 0 {
-		time.Sleep(delayMs * time.Millisecond)
-		c.registers.dt--
-	}
-}
-
-// Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.5
-func (c *chip8) handleSoundTimer() {
-	play := c.registers.st > 0
-	c.speaker.beep(play)
-	if play {
-		time.Sleep(delayMs * time.Millisecond)
-		c.registers.st--
-	}
-}
-
 func (c *chip8) load(rom []byte) {
 	size := len(rom)
 	if size+programLoadAddress >= memorySize {
@@ -77,21 +54,20 @@ func (c *chip8) load(rom []byte) {
 	c.registers.pc = programLoadAddress
 }
 
-func (c *chip8) waitForKeypress() (int, bool) {
-	var key int
-	var ok bool
-
-	running := true
-	for running {
-		event := sdl.WaitEvent()
-		switch e := event.(type) {
-		case *sdl.KeyboardEvent:
-			if e.GetType() == sdl.KEYDOWN {
-				key, ok = mapKey(e.Keysym.Sym)
-				running = false
-			}
-		}
+// Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.5
+func (c *chip8) handleDelayTimer() {
+	if c.registers.dt > 0 {
+		time.Sleep(3 * time.Millisecond)
+		c.registers.dt--
 	}
+}
 
-	return key, ok
+// Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.5
+func (c *chip8) handleSoundTimer() {
+	play := c.registers.st > 0
+	c.speaker.beep(play)
+	if play {
+		time.Sleep(17 * time.Millisecond) // 60 Hz
+		c.registers.st--
+	}
 }

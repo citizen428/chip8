@@ -21,7 +21,7 @@ func (m memory) get(index int) uint8 {
 	return m[index]
 }
 
-func (m memory) ReadInstruction(index int) uint16 {
+func (m memory) readInstruction(index int) uint16 {
 	validateMemoryIndex(index)
 	byte1 := uint16(m.get(index))
 	byte2 := uint16(m.get(index + 1))

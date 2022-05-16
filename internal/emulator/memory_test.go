@@ -41,7 +41,7 @@ func TestReadInstruction(t *testing.T) {
 	c.memory[0x201] = 168
 
 	var want uint16 = 0xc0a8
-	got := c.memory.ReadInstruction(0x200)
+	got := c.memory.readInstruction(0x200)
 
 	if got != want {
 		t.Errorf("got %v, wanted %v", got, want)

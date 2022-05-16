@@ -77,7 +77,7 @@ EventLoop:
 		chip8.handleDelayTimer()
 		chip8.handleSoundTimer()
 
-		opcode := chip8.memory.ReadInstruction(int(chip8.registers.pc))
+		opcode := chip8.memory.readInstruction(int(chip8.registers.pc))
 		chip8.registers.incrementPC()
 		chip8.exec(opcode)
 	}
