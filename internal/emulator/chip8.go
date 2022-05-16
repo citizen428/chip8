@@ -8,12 +8,9 @@ import (
 
 const (
 	dataRegistersCount = 16
-	stackDepth         = 16
 	delayMs            = 1
 	programLoadAddress = 0x200
 )
-
-type stack [stackDepth]uint16
 
 // Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.2
 type registers struct {
@@ -61,25 +58,6 @@ func NewChip8() (chip8, func()) {
 	copy(c.memory[0:80], defaultCharacterSet)
 	c.speaker, closer = NewSpeaker()
 	return c, closer
-}
-
-func (c chip8) validateStackDepth() {
-	if c.registers.sp > stackDepth {
-		panic("Stack overflow")
-	}
-}
-
-func (c *chip8) stackPush(val uint16) {
-	c.validateStackDepth()
-	c.stack[c.registers.sp] = val
-	c.registers.sp++
-}
-
-func (c *chip8) stackPop() uint16 {
-	c.registers.sp--
-	c.validateStackDepth()
-	val := c.stack[c.registers.sp]
-	return val
 }
 
 func (r *registers) incrementPC() {
