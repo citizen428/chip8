@@ -78,7 +78,6 @@ EventLoop:
 		chip8.handleSoundTimer()
 
 		opcode := chip8.memory.ReadInstruction(int(chip8.registers.pc))
-		fmt.Printf("%x\n", opcode)
 		chip8.registers.incrementPC()
 		chip8.exec(opcode)
 	}
