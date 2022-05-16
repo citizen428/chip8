@@ -10,7 +10,7 @@ const (
 	dataRegistersCount = 16
 	memorySize         = 4096
 	stackDepth         = 16
-	delayMs            = 17 // 60 Hz ~ every 17ms
+	delayMs            = 1
 	programLoadAddress = 0x200
 )
 
@@ -72,20 +72,20 @@ func validateMemoryIndex(index int) {
 	}
 }
 
-func (m *memory) memSet(index int, val uint8) {
+func (m *memory) set(index int, val uint8) {
 	validateMemoryIndex(index)
 	m[index] = val
 }
 
-func (m memory) memGet(index int) uint8 {
+func (m memory) get(index int) uint8 {
 	validateMemoryIndex(index)
 	return m[index]
 }
 
 func (m memory) ReadInstruction(index int) uint16 {
 	validateMemoryIndex(index)
-	byte1 := uint16(m.memGet(index))
-	byte2 := uint16(m.memGet(index + 1))
+	byte1 := uint16(m.get(index))
+	byte2 := uint16(m.get(index + 1))
 	return 256*byte1 + byte2
 }
 

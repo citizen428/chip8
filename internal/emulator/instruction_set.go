@@ -221,20 +221,20 @@ func (c *chip8) execFxxx(opcode uint16) {
 		tens := c.registers.v[x] / 10 % 10
 		units := c.registers.v[x] % 10
 
-		c.memory.memSet(int(c.registers.i), hundreds)
-		c.memory.memSet(int(c.registers.i+1), tens)
-		c.memory.memSet(int(c.registers.i+2), units)
+		c.memory.set(int(c.registers.i), hundreds)
+		c.memory.set(int(c.registers.i+1), tens)
+		c.memory.set(int(c.registers.i+2), units)
 
 	// Fx55 - LD [I], Vx - Store registers V0 through Vx in memory starting at location I.
 	case 0x55:
 		for i := uint16(0); i < x; i++ {
-			c.memory.memSet(int(c.registers.i+i), c.registers.v[i])
+			c.memory.set(int(c.registers.i+i), c.registers.v[i])
 		}
 
 	// x65 - LD Vx, [I] - Read registers V0 through Vx from memory starting at location I.
 	case 0x65:
 		for i := uint16(0); i < x; i++ {
-			c.registers.v[i] = c.memory.memGet(int(c.registers.i + i))
+			c.registers.v[i] = c.memory.get(int(c.registers.i + i))
 		}
 	}
 

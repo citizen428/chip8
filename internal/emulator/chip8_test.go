@@ -16,9 +16,9 @@ func TestMemSetGet(t *testing.T) {
 
 	m := memory{}
 	index := 23
-	m.memSet(index, 42)
+	m.set(index, 42)
 	want = 42
-	got := m.memGet(index)
+	got := m.get(index)
 
 	if got != want {
 		t.Errorf("got %v, wanted %v", got, want)
@@ -28,7 +28,7 @@ func TestMemSetGet(t *testing.T) {
 func TestMemoryLowerBound(t *testing.T) {
 	defer func() { recover() }()
 
-	NewChip8NoAudio().memory.memGet(-1)
+	NewChip8NoAudio().memory.get(-1)
 
 	// Unreachable if `Get` panics as intended
 	t.Errorf("did not panic")
@@ -38,7 +38,7 @@ func TestMemoryUpperBound(t *testing.T) {
 	defer func() { recover() }()
 
 	chip8 := NewChip8NoAudio()
-	chip8.memory.memGet(memorySize + 1)
+	chip8.memory.get(memorySize + 1)
 
 	// Unreachable if `Get` panics as intended
 	t.Errorf("did not panic")
