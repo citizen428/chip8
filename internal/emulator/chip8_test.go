@@ -20,23 +20,3 @@ func TestCharacterSetInitialization(t *testing.T) {
 		t.Errorf("got %v, wanted %v", got, want)
 	}
 }
-
-func TestSetPixelValidatesCoordinates(t *testing.T) {
-	defer func() { recover() }()
-
-	s := screen{}
-	s.setPixel(-1, 5)
-
-	// Unreachable if `validateScreenCoordinates` panics as intended
-	t.Errorf("did not panic")
-}
-
-func TestIsPixelSetValidatesCoordinates(t *testing.T) {
-	defer func() { recover() }()
-
-	s := screen{}
-	s.isPixelSet(1, 100)
-
-	// Unreachable if `validateScreenCoordinates` panics as intended
-	t.Errorf("did not panic")
-}
