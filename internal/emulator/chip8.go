@@ -8,13 +8,11 @@ import (
 
 const (
 	dataRegistersCount = 16
-	memorySize         = 4096
 	stackDepth         = 16
 	delayMs            = 1
 	programLoadAddress = 0x200
 )
 
-type memory [memorySize]uint8
 type stack [stackDepth]uint16
 
 // Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.2
@@ -63,30 +61,6 @@ func NewChip8() (chip8, func()) {
 	copy(c.memory[0:80], defaultCharacterSet)
 	c.speaker, closer = NewSpeaker()
 	return c, closer
-}
-
-// An invalid memory access in the emulator is not recoverable in Go code, so we panic.
-func validateMemoryIndex(index int) {
-	if index < 0 || index > memorySize {
-		panic("Invalid memory access")
-	}
-}
-
-func (m *memory) set(index int, val uint8) {
-	validateMemoryIndex(index)
-	m[index] = val
-}
-
-func (m memory) get(index int) uint8 {
-	validateMemoryIndex(index)
-	return m[index]
-}
-
-func (m memory) ReadInstruction(index int) uint16 {
-	validateMemoryIndex(index)
-	byte1 := uint16(m.get(index))
-	byte2 := uint16(m.get(index + 1))
-	return 256*byte1 + byte2
 }
 
 func (c chip8) validateStackDepth() {
