@@ -28,7 +28,8 @@ func Run(romPath string, scaleFactor int) {
 		panic(err)
 	}
 
-	chip8 := NewChip8()
+	chip8, closer := NewChip8()
+	defer closer()
 	rom, err := os.ReadFile(romPath)
 	if err != nil {
 		fmt.Printf("Error reading ROM: %+v", err)

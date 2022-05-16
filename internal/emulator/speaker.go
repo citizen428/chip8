@@ -41,7 +41,7 @@ type speaker struct {
 	device sdl.AudioDeviceID
 }
 
-func NewSpeaker() speaker {
+func NewSpeaker() (speaker, func()) {
 	var dev sdl.AudioDeviceID
 	var err error
 
@@ -57,7 +57,7 @@ func NewSpeaker() speaker {
 		panic("Cannot initialize audio device")
 	}
 
-	return speaker{device: dev}
+	return speaker{device: dev}, func() { sdl.CloseAudioDevice(dev) }
 }
 
 func (s *speaker) beep(play bool) {

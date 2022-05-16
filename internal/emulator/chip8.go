@@ -54,11 +54,13 @@ var defaultCharacterSet = []uint8{
 	0xf0, 0x80, 0xf0, 0x80, 0x80, // F
 }
 
-func NewChip8() chip8 {
+func NewChip8() (chip8, func()) {
+	var closer func()
+
 	c := chip8{}
 	copy(c.memory[0:80], defaultCharacterSet)
-	c.speaker = NewSpeaker()
-	return c
+	c.speaker, closer = NewSpeaker()
+	return c, closer
 }
 
 // An invalid memory access in the emulator is not recoverable in Go code, so we panic.
