@@ -16,8 +16,8 @@ func Run(romPath string, scaleFactor int) {
 	emulatorWidth := int32(chip8width * scaleFactor)
 	emulatorHeight := int32(chip8height * scaleFactor)
 
-	window, err := sdl.CreateWindow("CHIP-8", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
-		emulatorWidth, emulatorHeight, sdl.WINDOW_SHOWN)
+	window, err := sdl.CreateWindow("CHIP-8 — "+romPath, sdl.WINDOWPOS_UNDEFINED,
+		sdl.WINDOWPOS_UNDEFINED, emulatorWidth, emulatorHeight, sdl.WINDOW_SHOWN)
 	if err != nil {
 		panic(err)
 	}
@@ -74,11 +74,6 @@ EventLoop:
 		}
 
 		renderer.Present()
-		chip8.handleDelayTimer()
-		chip8.handleSoundTimer()
-
-		opcode := chip8.memory.readInstruction(int(chip8.registers.pc))
-		chip8.registers.incrementPC()
-		chip8.exec(opcode)
+		chip8.cycle()
 	}
 }

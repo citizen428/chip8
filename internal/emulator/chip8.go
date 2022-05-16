@@ -54,6 +54,15 @@ func (c *chip8) load(rom []byte) {
 	c.registers.pc = programLoadAddress
 }
 
+func (c *chip8) cycle() {
+	c.handleDelayTimer()
+	c.handleSoundTimer()
+
+	opcode := c.memory.readInstruction(int(c.registers.pc))
+	c.registers.incrementPC()
+	c.exec(opcode)
+}
+
 // Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.5
 func (c *chip8) handleDelayTimer() {
 	if c.registers.dt > 0 {
