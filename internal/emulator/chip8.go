@@ -2,6 +2,8 @@ package emulator
 
 import (
 	"time"
+
+	"github.com/veandco/go-sdl2/sdl"
 )
 
 const (
@@ -136,4 +138,23 @@ func (c *chip8) load(rom []byte) {
 
 	copy(c.memory[programLoadAddress:], rom)
 	c.registers.pc = programLoadAddress
+}
+
+func (c *chip8) waitForKeypress() (int, bool) {
+	var key int
+	var ok bool
+
+	running := true
+	for running {
+		event := sdl.WaitEvent()
+		switch e := event.(type) {
+		case *sdl.KeyboardEvent:
+			if e.GetType() == sdl.KEYDOWN {
+				key, ok = mapKey(e.Keysym.Sym)
+				running = false
+			}
+		}
+	}
+
+	return key, ok
 }

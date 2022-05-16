@@ -3,8 +3,9 @@ package emulator
 // Reference: http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.4=
 
 const (
-	chip8width  = 64
-	chip8height = 32
+	chip8width   = 64
+	chip8height  = 32
+	spriteHeight = 5
 )
 
 type screen struct {
