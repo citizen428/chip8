@@ -2,18 +2,24 @@ package emulator
 
 import "testing"
 
-func TestSetGet(t *testing.T) {
-	var want uint8
-
+func TestSet(t *testing.T) {
 	m := memory{}
 	index := 23
-	m.set(index, 42)
-	want = 42
-	got := m.get(index)
 
-	if got != want {
-		t.Errorf("got %v, wanted %v", got, want)
-	}
+	m.set(index, 42)
+
+	var want uint8 = 42
+	got := m[index]
+	assertEqual(t, want, got)
+}
+
+func TestGet(t *testing.T) {
+	m := memory{}
+	index := 23
+
+	var want uint8 = m.get(index)
+	got := m[index]
+	assertEqual(t, want, got)
 }
 
 func TestMemoryLowerBound(t *testing.T) {
@@ -42,8 +48,5 @@ func TestReadInstruction(t *testing.T) {
 
 	var want uint16 = 0xc0a8
 	got := c.memory.readInstruction(0x200)
-
-	if got != want {
-		t.Errorf("got %v, wanted %v", got, want)
-	}
+	assertEqual(t, got, want)
 }

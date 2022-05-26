@@ -9,50 +9,43 @@ import (
 func TestIsKeyDown(t *testing.T) {
 	k := keyboard{}
 	key := 0xE
-	k.keyDown(key)
 
-	want := true
-	got := k.isKeyDown(key)
+	t.Run("key is pressed", func(t *testing.T) {
+		k.keyDown(key)
 
-	if got != want {
-		t.Errorf("got %v, wanted %v", got, want)
-	}
-}
+		want := true
+		got := k.isKeyDown(key)
+		assertEqual(t, want, got)
+	})
 
-func TestKeyUp(t *testing.T) {
-	k := keyboard{}
-	key := 0xA
-	k.keyDown(key)
-	k.keyUp(key)
+	t.Run("key is not pressed", func(t *testing.T) {
+		k.keyDown(key)
+		k.keyUp(key)
 
-	want := false
-	got := k.isKeyDown(key)
-
-	if got != want {
-		t.Errorf("got %v, wanted %v", got, want)
-	}
+		want := false
+		got := k.isKeyDown(key)
+		assertEqual(t, want, got)
+	})
 }
 
 func TestMapKey(t *testing.T) {
-	var tests = map[sdl.Keycode]int{
-		sdl.K_1: 1,
-		sdl.K_w: 5,
-		sdl.K_d: 9,
-		sdl.K_v: 15,
-	}
-
-	for key, want := range tests {
-		got, _ := mapKey(key)
-		if got != want {
-			t.Errorf("got %v, wanted %v", got, want)
+	t.Run("looking up a mapped keys", func(t *testing.T) {
+		var tests = map[sdl.Keycode]int{
+			sdl.K_1: 1,
+			sdl.K_w: 5,
+			sdl.K_d: 9,
+			sdl.K_v: 15,
 		}
-	}
-}
 
-func TestMapKeyUnmapped(t *testing.T) {
-	_, err := mapKey(sdl.K_RETURN)
+		for key, want := range tests {
+			got, _ := mapKey(key)
+			assertEqual(t, got, want)
+		}
+	})
 
-	if err {
-		t.Errorf("got %v, wanted %v", true, false)
-	}
+	t.Run("looking up a unmapped keys", func(t *testing.T) {
+		want := -1
+		got, _ := mapKey(sdl.K_RETURN)
+		assertEqual(t, got, want)
+	})
 }
